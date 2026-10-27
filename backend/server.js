@@ -73,6 +73,13 @@ app.post("/click", (req, res) => {
 	});
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-	console.log(`API démarrée sur le port ${PORT}`);
-});
+// require.main === module permet de savoir si le serveur démarre correctement
+// module.exports = app permet au fichier test d'importer Express
+
+if (require.main === module) {
+    app.listen(PORT, "0.0.0.0", () => {
+        console.log(`API démarrée sur le port ${PORT}`);
+    });
+}
+
+module.exports = app;

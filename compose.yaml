@@ -5,17 +5,17 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "____:3000"            # 1. Port du backend sur l'hôte
+      - "3000:3000"            # 1. Port du backend sur l'hôte
     restart: unless-stopped
 
   frontend:
     build:
-      context: ____           # 2. Dossier du frontend
+      context: ./frontend          # 2. Dossier du frontend
       dockerfile: Dockerfile
     ports:
-      - "____:80"              # 3. Port du frontend sur l'hôte
+      - "4200:80"              # 3. Port du frontend sur l'hôte
     depends_on:
-      - ____                  # 4. Service à démarrer avant le frontend
+      - backend                  # 4. Service à démarrer avant le frontend
     restart: unless-stopped
 
 # 5. Quel nom de service le frontend doit-il utiliser

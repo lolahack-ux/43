@@ -36,3 +36,45 @@ Thumbs.db
 tmp/
 temp/
 *.tmp
+
+# =========================
+# Node.js / npm / Yarn
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# Jest / Tests
+# =========================
+coverage/
+.nyc_output/
+
+# =========================
+# Variables d'environnement
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Build frontend
+# =========================
+dist/
+build/
+
+# =========================
+# Fichiers système / IDE
+# =========================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# =========================
+# Fichiers temporaires
+# =========================
+*.log
+tmp/
+temp/
