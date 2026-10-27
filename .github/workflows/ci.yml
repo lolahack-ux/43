@@ -142,8 +142,8 @@ jobs:
         run: |
           docker build \
             -f backend/Dockerfile \
-            -t "${{ secrets.DOCKERHUB_USERNAME }}/bouton-rouge-backend:${{ github.sha }}" \
-            -t "${{ secrets.DOCKERHUB_USERNAME }}/bouton-rouge-backend:latest" \
+            -t "${{ secrets.DOCKERHUB_USERNAME }}/bouton-rouge:backend:${{ github.sha }}" \
+            -t "${{ secrets.DOCKERHUB_USERNAME }}/bouton-rouge:backend" \
             ./backend
 
       - name: Publier les images Docker
