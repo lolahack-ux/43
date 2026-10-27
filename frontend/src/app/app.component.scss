@@ -1,1 +1,354 @@
-:host{display:block;min-height:100vh}.page{position:relative;isolation:isolate;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:0 24px;background:radial-gradient(ellipse at 50% 45%,#201823 0%,#101019 62%)}.glow{position:absolute;z-index:-1;width:460px;height:460px;border-radius:50%;filter:blur(105px);opacity:.17;pointer-events:none}.glow-one{background:#d52d43;top:15%;left:-260px}.glow-two{background:#7e446d;right:-280px;bottom:8%}.topbar{width:min(100%,1100px);height:90px;display:flex;align-items:center;gap:8px;font:700 11px 'Space Mono',monospace;letter-spacing:1.6px;color:#8e8996}.topbar strong{color:#f7f5f7}.logo-mark{color:#f04d5b;font-size:24px;margin-right:8px}.top-status{margin-left:auto;font-size:10px;color:#85818d}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#59d9a5;margin-right:6px;box-shadow:0 0 12px #59d9a5}.panel{background:#1c1b27;border:1px solid #373140;border-radius:20px;box-shadow:0 25px 100px #0005}.login-panel{width:min(100%,440px);margin:auto;padding:40px}.eyebrow{font:700 11px 'Space Mono',monospace;color:#ed6471;letter-spacing:2px}.lock{font-size:45px;color:#ed6471;margin-top:24px}h1{font-size:clamp(38px,6vw,60px);line-height:1.06;letter-spacing:-2px;margin:18px 0 12px;font-weight:800}.login-panel h1{font-size:42px}.accent{color:#ed5262}.login-panel>p,.subtitle{color:#9e98a7;line-height:1.65;font-size:14px}.login-panel form{display:flex;flex-direction:column;margin-top:30px;gap:11px}.login-panel label{font:700 10px 'Space Mono',monospace;color:#9e98a7;letter-spacing:1.4px;margin-top:9px}.login-panel input{width:100%;background:#12121c;border:1px solid #403a49;border-radius:9px;color:white;padding:15px 16px;outline:none}.login-panel input:focus{border-color:#ef5565}.login-button{margin-top:15px;border:0;border-radius:9px;background:#e94d5d;color:white;font:700 12px 'Space Mono',monospace;letter-spacing:1px;padding:17px}.login-button:hover{background:#f46673}.footnote{border-top:1px solid #37313e;margin-top:30px;padding-top:22px;font:10px 'Space Mono',monospace;line-height:1.7;color:#746f7e;text-align:center}.game{width:min(100%,650px);margin:auto;text-align:center;padding:30px 0 20px}.game h1{margin-top:22px}.subtitle{margin:0}.button-area{position:relative;height:330px;display:flex;justify-content:center;align-items:center}.ring{position:absolute;border:1px solid #4b2a36;border-radius:50%;pointer-events:none}.ring-one{width:275px;height:275px}.ring-two{width:325px;height:325px;border-color:#332634}.red-button{position:relative;z-index:1;width:222px;height:222px;border-radius:50%;border:11px solid #9e2437;background:radial-gradient(circle at 35% 25%,#ff6976 0%,#ed364d 35%,#b70e2c 85%);box-shadow:0 13px 0 #701528,0 21px 30px #0009,0 0 70px #db28463b,inset 0 5px 15px #ffb2b466;color:white;font:800 22px 'Space Mono',monospace;letter-spacing:1px;text-shadow:0 2px 3px #69091d;transition:transform .12s,box-shadow .12s}.red-button:not(:disabled):active{transform:translateY(10px);box-shadow:0 3px 0 #701528,0 7px 15px #0009}.finished .red-button{filter:grayscale(.4)}.message-panel{background:#1d1c28;border:1px solid #3a3340;border-radius:13px;min-height:110px;padding:22px}.message-label{font:700 10px 'Space Mono',monospace;letter-spacing:2px;color:#807a8d}.message-panel p{font-size:19px;font-weight:700;margin:13px 0 0;line-height:1.4}.progress{margin:24px 0}.progress-info{display:flex;justify-content:space-between;color:#8e8797;font:10px 'Space Mono',monospace;letter-spacing:1px}.progress-info strong{color:#ed6471}.track{height:6px;border-radius:8px;background:#35303d;margin-top:12px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#d72d47,#ff7783);transition:width .25s}.error{color:#ff8996;font-size:13px}.reset-button{border:1px solid #6c4752;border-radius:9px;padding:12px 22px;color:white;background:#2b202e;font:700 12px 'Space Mono',monospace}footer{padding:24px 0;color:#686373;text-align:center;font:10px 'Space Mono',monospace;letter-spacing:1px}@media(max-width:550px){.topbar{height:72px;font-size:9px}.top-status{display:none}.login-panel{padding:28px}.game h1{font-size:44px}.button-area{height:285px}.ring-one{width:250px;height:250px}.ring-two{width:285px;height:285px}.red-button{width:200px;height:200px}}
+:host {
+    display: block;
+    min-height: 100vh
+}
+
+.page {
+    position: relative;
+    isolation: isolate;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 24px;
+    background: radial-gradient(ellipse at 50% 45%, #201823 0%, #101019 62%)
+}
+
+.glow {
+    position: absolute;
+    z-index: -1;
+    width: 460px;
+    height: 460px;
+    border-radius: 50%;
+    filter: blur(105px);
+    opacity: .17;
+    pointer-events: none
+}
+
+.glow-one {
+    background: #d52d43;
+    top: 15%;
+    left: -260px
+}
+
+.glow-two {
+    background: #7e446d;
+    right: -280px;
+    bottom: 8%
+}
+
+.topbar {
+    width: min(100%, 1100px);
+    height: 90px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font: 700 11px 'Space Mono', monospace;
+    letter-spacing: 1.6px;
+    color: #8e8996
+}
+
+.topbar strong {
+    color: #f7f5f7
+}
+
+.logo-mark {
+    color: #f04d5b;
+    font-size: 24px;
+    margin-right: 8px
+}
+
+.top-status {
+    margin-left: auto;
+    font-size: 10px;
+    color: #85818d
+}
+
+.dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #59d9a5;
+    margin-right: 6px;
+    box-shadow: 0 0 12px #59d9a5
+}
+
+.panel {
+    background: #1c1b27;
+    border: 1px solid #373140;
+    border-radius: 20px;
+    box-shadow: 0 25px 100px #0005
+}
+
+.login-panel {
+    width: min(100%, 440px);
+    margin: auto;
+    padding: 40px
+}
+
+.eyebrow {
+    font: 700 11px 'Space Mono', monospace;
+    color: #ed6471;
+    letter-spacing: 2px
+}
+
+.lock {
+    font-size: 45px;
+    color: #ed6471;
+    margin-top: 24px
+}
+
+h1 {
+    font-size: clamp(38px, 6vw, 60px);
+    line-height: 1.06;
+    letter-spacing: -2px;
+    margin: 18px 0 12px;
+    font-weight: 800
+}
+
+.login-panel h1 {
+    font-size: 42px
+}
+
+.accent {
+    color: #ed5262
+}
+
+.login-panel>p,
+.subtitle {
+    color: #9e98a7;
+    line-height: 1.65;
+    font-size: 14px
+}
+
+.login-panel form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    gap: 11px
+}
+
+.login-panel label {
+    font: 700 10px 'Space Mono', monospace;
+    color: #9e98a7;
+    letter-spacing: 1.4px;
+    margin-top: 9px
+}
+
+.login-panel input {
+    width: 100%;
+    background: #12121c;
+    border: 1px solid #403a49;
+    border-radius: 9px;
+    color: white;
+    padding: 15px 16px;
+    outline: none
+}
+
+.login-panel input:focus {
+    border-color: #ef5565
+}
+
+.login-button {
+    margin-top: 15px;
+    border: 0;
+    border-radius: 9px;
+    background: #e94d5d;
+    color: white;
+    font: 700 12px 'Space Mono', monospace;
+    letter-spacing: 1px;
+    padding: 17px
+}
+
+.login-button:hover {
+    background: #f46673
+}
+
+.footnote {
+    border-top: 1px solid #37313e;
+    margin-top: 30px;
+    padding-top: 22px;
+    font: 10px 'Space Mono', monospace;
+    line-height: 1.7;
+    color: #746f7e;
+    text-align: center
+}
+
+.game {
+    width: min(100%, 650px);
+    margin: auto;
+    text-align: center;
+    padding: 30px 0 20px
+}
+
+.game h1 {
+    margin-top: 22px
+}
+
+.subtitle {
+    margin: 0
+}
+
+.button-area {
+    position: relative;
+    height: 330px;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.ring {
+    position: absolute;
+    border: 1px solid #4b2a36;
+    border-radius: 50%;
+    pointer-events: none
+}
+
+.ring-one {
+    width: 275px;
+    height: 275px
+}
+
+.ring-two {
+    width: 325px;
+    height: 325px;
+    border-color: #332634
+}
+
+.red-button {
+    position: relative;
+    z-index: 1;
+    width: 222px;
+    height: 222px;
+    border-radius: 50%;
+    border: 11px solid #9e2437;
+    background: radial-gradient(circle at 35% 25%, #ff6976 0%, #ed364d 35%, #008000 85%);
+    box-shadow: 0 13px 0 #701528, 0 21px 30px #0009, 0 0 70px #db28463b, inset 0 5px 15px #ffb2b466;
+    color: white;
+    font: 800 22px 'Space Mono', monospace;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 3px #69091d;
+    transition: transform .12s, box-shadow .12s
+}
+
+.red-button:not(:disabled):active {
+    transform: translateY(10px);
+    box-shadow: 0 3px 0 #701528, 0 7px 15px #0009
+}
+
+.finished .red-button {
+    filter: grayscale(.4)
+}
+
+.message-panel {
+    background: #1d1c28;
+    border: 1px solid #3a3340;
+    border-radius: 13px;
+    min-height: 110px;
+    padding: 22px
+}
+
+.message-label {
+    font: 700 10px 'Space Mono', monospace;
+    letter-spacing: 2px;
+    color: #807a8d
+}
+
+.message-panel p {
+    font-size: 19px;
+    font-weight: 700;
+    margin: 13px 0 0;
+    line-height: 1.4
+}
+
+.progress {
+    margin: 24px 0
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    color: #8e8797;
+    font: 10px 'Space Mono', monospace;
+    letter-spacing: 1px
+}
+
+.progress-info strong {
+    color: #ed6471
+}
+
+.track {
+    height: 6px;
+    border-radius: 8px;
+    background: #35303d;
+    margin-top: 12px;
+    overflow: hidden
+}
+
+.fill {
+    height: 100%;
+    background: linear-gradient(90deg, #d72d47, #ff7783);
+    transition: width .25s
+}
+
+.error {
+    color: #ff8996;
+    font-size: 13px
+}
+
+.reset-button {
+    border: 1px solid #6c4752;
+    border-radius: 9px;
+    padding: 12px 22px;
+    color: white;
+    background: #2b202e;
+    font: 700 12px 'Space Mono', monospace
+}
+
+footer {
+    padding: 24px 0;
+    color: #686373;
+    text-align: center;
+    font: 10px 'Space Mono', monospace;
+    letter-spacing: 1px
+}
+
+@media(max-width:550px) {
+    .topbar {
+        height: 72px;
+        font-size: 9px
+    }
+
+    .top-status {
+        display: none
+    }
+
+    .login-panel {
+        padding: 28px
+    }
+
+    .game h1 {
+        font-size: 44px
+    }
+
+    .button-area {
+        height: 285px
+    }
+
+    .ring-one {
+        width: 250px;
+        height: 250px
+    }
+
+    .ring-two {
+        width: 285px;
+        height: 285px
+    }
+
+    .red-button {
+        width: 200px;
+        height: 200px
+    }
+}
