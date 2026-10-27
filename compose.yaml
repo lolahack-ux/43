@@ -1,34 +1,20 @@
-
 services:
   backend:
+    image: lolaedoc/bouton-rouge:backend
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"            # 1. Port du backend sur l'hôte
+      - "3000:3000"
     restart: unless-stopped
 
   frontend:
+    image: lolaedoc/bouton-rouge:frontend
     build:
-      context: ./frontend          # 2. Dossier du frontend
+      context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "4200:80"              # 3. Port du frontend sur l'hôte
+      - "4200:80"
     depends_on:
-      - backend                  # 4. Service à démarrer avant le frontend
+      - backend
     restart: unless-stopped
-
-# 5. Quel nom de service le frontend doit-il utiliser
-#    pour contacter le backend dans le réseau Docker ?
-#    Réponse : ____
-
-# 6. Quelle commande démarre les deux services
-#    en reconstruisant les images ?
-#    Réponse : ____
-
-# 7. Quelle commande affiche les conteneurs du projet ?
-#    Réponse : ____
-
-# 8. Quelle commande arrête et supprime les conteneurs
-#    du projet ?
-#    Réponse : ____

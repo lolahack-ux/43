@@ -9,7 +9,7 @@ npm install --save-dev jest
 Création d'un fichier `nomDuFichier.test.js`
 Lancer les tests:
 ```bash
-yarn test
+npm test
 ```
 # 2 Supertest
 **Supertest** permet de tester les routes API Express.

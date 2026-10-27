@@ -1,0 +1,152 @@
+name: CI
+
+run-name: >-
+  ${{ github.event_name == 'workflow_dispatch'
+    && format('CI manuelle sur {0}', github.ref_name)
+    || format('CI sur {0}', github.ref_name) }}
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+
+  # ==========================================
+  # 1. TESTS BACKEND
+  # ==========================================
+
+  test:
+    name: Tests JavaScript BACKEND
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Installer Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: yarn
+          cache-dependency-path: backend/yarn.lock
+
+      - name: Installer les dépendances
+        run: yarn install --frozen-lockfile
+
+      - name: Exécuter les tests
+        run: yarn test --runInBand
+
+  # ==========================================
+  # 2. FUSION AUTOMATIQUE VERS DEV
+  # ==========================================
+
+  merge-dev:
+    name: Fusion automatique vers dev
+
+    if: >-
+      github.event_name == 'push'
+      && github.ref != 'refs/heads/dev'
+
+    needs: test
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      actions: write
+
+    concurrency:
+      group: merge-dev
+      cancel-in-progress: false
+
+    steps:
+      - name: Récupérer la branche dev
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+
+      - name: Fusionner la branche source dans dev
+        id: merge
+        env:
+          SOURCE_BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin "$SOURCE_BRANCH" dev
+
+          git checkout dev
+          git reset --hard origin/dev
+
+          if git merge-base --is-ancestor "origin/$SOURCE_BRANCH" HEAD; then
+            echo "Aucun nouveau commit à fusionner."
+            echo "merged=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git merge --no-ff \
+            "origin/$SOURCE_BRANCH" \
+            -m "Merge branch '$SOURCE_BRANCH' into dev"
+
+          git push origin HEAD:dev
+
+          echo "merged=true" >> "$GITHUB_OUTPUT"
+
+      - name: Relancer la CI sur dev
+        if: steps.merge.outputs.merged == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run ci.yml \
+            --repo "${{ github.repository }}" \
+            --ref dev
+
+  # ==========================================
+  # 3. BUILD ET PUBLICATION DOCKER HUB
+  # ==========================================
+
+  build:
+    name: Build et publication Docker Hub
+
+    if: >-
+      github.ref == 'refs/heads/dev'
+      && (github.event_name == 'push'
+      || github.event_name == 'workflow_dispatch')
+
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Connexion à Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Construire l'image backend
+        run: |
+          docker build \
+            -f backend/Dockerfile \
+            -t "${{ secrets.DOCKERHUB_USERNAME }}/bouton-rouge-backend:${{ github.sha }}" \
+            -t "${{ secrets.DOCKERHUB_USERNAME }}/bouton-rouge-backend:latest" \
+            ./backend
+
+      - name: Publier les images Docker
+        run: |
+          docker push "${{ secrets.DOCKERHUB_USERNAME }}/bouton-rouge-backend:${{ github.sha }}"
+          docker push "${{ secrets.DOCKERHUB_USERNAME }}/bouton-rouge-backend:latest"
