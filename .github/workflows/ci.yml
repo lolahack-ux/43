@@ -113,9 +113,9 @@ jobs:
             --repo "${{ github.repository }}" \
             --ref dev
 
-  # ==========================================
-  # 3. BUILD ET PUBLICATION DOCKER HUB
-  # ==========================================
+    # ==========================================
+    # 3. BUILD ET PUBLICATION DOCKER HUB
+    # ==========================================
 
   build:
     name: Build et publication Docker Hub
@@ -138,15 +138,32 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # Construction du backend
       - name: Construire l'image backend
         run: |
           docker build \
             -f backend/Dockerfile \
-            -t "${{ secrets.DOCKERHUB_USERNAME }}/bouton-rouge:backend-${{ github.sha }}" \
-            -t "${{ secrets.DOCKERHUB_USERNAME }}/bouton-rouge:backend" \
+            -t "lolaedoc/bouton-rouge:backend-${{ github.sha }}" \
+            -t "lolaedoc/bouton-rouge:backend" \
             ./backend
 
-      - name: Publier les images Docker
+      # Construction du frontend
+      - name: Construire l'image frontend
         run: |
-          docker push "${{ secrets.DOCKERHUB_USERNAME }}/bouton-rouge:backend-${{ github.sha }}"
-          docker push "${{ secrets.DOCKERHUB_USERNAME }}/bouton-rouge:backend"
+          docker build \
+            -f frontend/Dockerfile \
+            -t "lolaedoc/bouton-rouge:frontend-${{ github.sha }}" \
+            -t "lolaedoc/bouton-rouge:frontend" \
+            ./frontend
+
+      # Publication du backend
+      - name: Publier le backend
+        run: |
+          docker push "lolaedoc/bouton-rouge:backend-${{ github.sha }}"
+          docker push "lolaedoc/bouton-rouge:backend"
+
+      # Publication du frontend
+      - name: Publier le frontend
+        run: |
+          docker push "lolaedoc/bouton-rouge:frontend-${{ github.sha }}"
+          docker push "lolaedoc/bouton-rouge:frontend"
