@@ -82,4 +82,11 @@ if (require.main === module) {
     });
 }
 
+// Route Healthtchek
+app.get("/health", (req, res) => {
+    res.status(200).json({
+        status: "ok",
+        message: "Backend opérationnel"
+    });
+});
 module.exports = app;
