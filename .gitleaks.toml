@@ -1,0 +1,4 @@
+title = "Sécurité du projet Bouton Rouge"
+
+[extend]
+useDefault = true
