@@ -994,3 +994,105 @@ Les outils DevSecOps sont complémentaires :
 - OWASP ZAP examine la sécurité des réponses HTTP.
 
 L'objectif n'est pas seulement d'obtenir une pipeline verte, mais de **comprendre les contrôles réalisés, leurs limites et les risques qu'ils permettent de réduire**.
+
+## 12. GitHub Actions — Runner auto-hébergé dans Docker
+
+### Présentation
+
+Un **self-hosted runner** permet d'exécuter des workflows GitHub Actions sur une machine que l'on administre soi-même, plutôt que sur un runner fourni par GitHub.
+
+Il est possible de faire fonctionner ce runner dans un conteneur Docker.
+
+### Configuration utilisée
+
+- Système hôte : Windows avec Docker Desktop.
+- Conteneur : Linux x64.
+- Image Docker : `myoung34/github-runner`.
+- Dépôt : `https://github.com/lolahack-ux/43`.
+- Runner éphémère : `EPHEMERAL=1`.
+
+### Étape 1 — Créer le runner sur GitHub
+
+Dans le dépôt :
+
+`Settings → Actions → Runners → New self-hosted runner`
+
+Sélectionner Linux et x64, puis récupérer le token d'enregistrement temporaire.
+
+Ne jamais enregistrer ce token dans Git.
+
+### Étape 2 — Préparer PowerShell
+
+```powershell
+$env:RUNNER_TOKEN = Read-Host "Token GitHub" -MaskInput
+$env:RUNNER_REPO_URL = "https://github.com/lolahack-ux/43"
+```
+
+### Étape 3 — Lancer le runner
+
+```powershell
+docker run --rm -it `
+  --name bouton-rouge-runner `
+  -e REPO_URL="$env:RUNNER_REPO_URL" `
+  -e RUNNER_TOKEN="$env:RUNNER_TOKEN" `
+  -e RUNNER_NAME="bouton-rouge-docker" `
+  -e RUNNER_SCOPE="repo" `
+  -e LABELS="bouton-rouge-demo" `
+  -e RUN_AS_ROOT="false" `
+  -e EPHEMERAL="1" `
+  myoung34/github-runner:latest
+```
+
+Le runner s'enregistre auprès de GitHub et attend un job.
+
+Après le lancement, supprimer le token de la session PowerShell :
+
+```powershell
+Remove-Item Env:RUNNER_TOKEN
+```
+
+### Étape 4 — Créer un workflow de test
+
+Fichier `.github/workflows/test-runner.yml` :
+
+```yaml
+name: Test runner auto-hébergé
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-runner:
+    runs-on: [self-hosted, linux, x64, bouton-rouge-demo]
+
+    steps:
+      - name: Vérifier le runner
+        run: |
+          echo "Runner auto-hébergé opérationnel"
+          uname -a
+          whoami
+          pwd
+```
+
+Le workflow doit être présent sur la branche par défaut du dépôt pour pouvoir être déclenché manuellement dans GitHub Actions.
+
+### Étape 5 — Exécuter le workflow
+
+Dans GitHub :
+
+`Actions → Test runner auto-hébergé → Run workflow`
+
+Vérifier que le job s'exécute et termine avec succès.
+
+### Points importants
+
+- Le runner éphémère traite un seul job avant de s'arrêter.
+- Il doit être relancé pour exécuter un nouveau job.
+- Il faut protéger les tokens et les secrets GitHub.
+- Éviter de donner au runner l'accès au socket Docker ou au mode privilégié sans nécessité.
+- Un runner auto-hébergé ne doit pas exécuter de code provenant de sources non fiables.
+
+**Résultat de l'exercice :** création et validation d'un runner GitHub Actions auto-hébergé dans Docker.
