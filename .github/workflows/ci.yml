@@ -44,31 +44,34 @@ jobs:
   # 2. TESTS BACKEND
   # ==========================================
 
-  test:
-    name: Tests JavaScript BACKEND
-    needs: gitleaks
-    runs-on: ubuntu-latest
+    test:
+      name: Tests et audit JavaScript BACKEND
+      needs: gitleaks
+      runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: backend
+      defaults:
+        run:
+          working-directory: backend
 
-    steps:
-      - name: Récupérer le dépôt
-        uses: actions/checkout@v4
+      steps:
+        - name: Récupérer le dépôt
+          uses: actions/checkout@v4
 
-      - name: Installer Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: "22"
-          cache: yarn
-          cache-dependency-path: backend/yarn.lock
+        - name: Installer Node
+          uses: actions/setup-node@v5
+          with:
+            node-version: "22"
+            cache: npm
+            cache-dependency-path: backend/package-lock.json
 
-      - name: Installer les dépendances
-        run: yarn install --frozen-lockfile
+        - name: Installer les dépendances
+          run: npm ci
 
-      - name: Exécuter les tests
-        run: yarn test --runInBand
+        - name: Auditer les dépendances
+          run: npm audit --audit-level=moderate
+
+        - name: Exécuter les tests Jest
+          run: npm test -- --runInBand
 
   # ==========================================
   # 3. FUSION AUTOMATIQUE VERS DEV
