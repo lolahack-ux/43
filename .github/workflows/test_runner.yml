@@ -1,0 +1,20 @@
+name: Test runner auto-hébergé
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-runner:
+    name: Vérifier le runner Docker
+    runs-on: [self-hosted, linux, x64, bouton-rouge-demo]
+
+    steps:
+      - name: Afficher les informations du runner
+        run: |
+          echo "Mon runner auto-hébergé fonctionne !"
+          uname -a
+          whoami
+          pwd
