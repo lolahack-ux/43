@@ -18,11 +18,31 @@ permissions:
 jobs:
 
   # ==========================================
-  # 1. TESTS BACKEND
+  # 1. ANALYSE DE SÉCURITÉ GITLEAKS
+  # ==========================================
+
+  gitleaks:
+    name: Recherche de secrets
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le dépôt GitHub
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Analyser les secrets avec Gitleaks
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ==========================================
+  # 2. TESTS BACKEND
   # ==========================================
 
   test:
     name: Tests JavaScript BACKEND
+    needs: gitleaks
     runs-on: ubuntu-latest
 
     defaults:
@@ -47,7 +67,7 @@ jobs:
         run: yarn test --runInBand
 
   # ==========================================
-  # 2. FUSION AUTOMATIQUE VERS DEV
+  # 3. FUSION AUTOMATIQUE VERS DEV
   # ==========================================
 
   merge-dev:
@@ -114,7 +134,7 @@ jobs:
             --ref dev
 
     # ==========================================
-    # 3. BUILD ET PUBLICATION DOCKER HUB
+    # 4. BUILD ET PUBLICATION DOCKER HUB
     # ==========================================
 
   build:
