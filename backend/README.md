@@ -68,3 +68,20 @@ npm audit
 ## Trivy
 C'est un outil de sécurité qui permet notamment d'analyser les images Docker.
 Il est intégré au CI avant la publication des images pour détecter les failles de sécurité.
+
+## Route Healthtchek
+Création d'une route dans le backend pour tester si le contener répond bien à intervalles régulier
+
+## ZAP
+Installe ZAP et intéroge le HTTP du frontend
+```powershell
+docker run --rm ghcr.io/zaproxy/zaproxy:stable curl -I http://host.docker.internal:4201
+```
+La commande pour lancer le ZAP sur le frontend
+```powershell
+docker run --rm -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://host.docker.internal:4201 -m 1 -s
+```
+la commande pour lancer le ZAP sur le backend
+```powershell
+docker run --rm -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://host.docker.internal:3001/health -m 1 -s -I
+```

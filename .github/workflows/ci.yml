@@ -73,8 +73,56 @@ jobs:
       - name: Exécuter les tests Jest
         run: npm test -- --runInBand
 
+    # ==========================================
+    # 3. SCAN ZAP
+    # ==========================================
+
+  zap:
+    name: Scan OWASP ZAP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Construire et démarrer le backend
+        run: docker compose up -d --build backend
+
+      - name: Attendre que le backend soit healthy
+        run: |
+          for i in {1..30}; do
+            STATUS=$(docker inspect --format='{{.State.Health.Status}}' \
+              "$(docker compose ps -q backend)")
+
+            if [ "$STATUS" = "healthy" ]; then
+              echo "Backend opérationnel"
+              exit 0
+            fi
+
+            sleep 2
+          done
+
+          echo "Le backend n'est pas healthy"
+          docker compose logs backend
+          exit 1
+
+      - name: Scanner le backend avec ZAP
+        run: |
+          docker run --rm \
+            --network host \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap-baseline.py \
+            -t http://127.0.0.1:3001/health \
+            -m 1 \
+            -s \
+            -I
+
+      - name: Arrêter les conteneurs
+        if: always()
+        run: docker compose down
+
   # ==========================================
-  # 3. FUSION AUTOMATIQUE VERS DEV
+  # 4. FUSION AUTOMATIQUE VERS DEV
   # ==========================================
 
   merge-dev:
@@ -84,7 +132,7 @@ jobs:
       github.event_name == 'push'
       && github.ref != 'refs/heads/dev'
 
-    needs: test
+    needs: [test, zap]
     runs-on: ubuntu-latest
 
     permissions:
@@ -141,7 +189,7 @@ jobs:
             --ref dev
 
     # ==========================================
-    # 4. BUILD ET PUBLICATION DOCKER HUB
+    # 5. BUILD ET PUBLICATION DOCKER HUB
     # ==========================================
 
   build:
@@ -152,7 +200,7 @@ jobs:
       && (github.event_name == 'push'
       || github.event_name == 'workflow_dispatch')
 
-    needs: test
+    needs: [test, zap]
     runs-on: ubuntu-latest
 
     steps:
@@ -192,7 +240,7 @@ jobs:
           format: "table"
           severity: "HIGH,CRITICAL"
           exit-code: "1"
-          
+
       # Utilisation de Trivy pour vérification de l'image frontend avant le push
       - name: Scanner l'image frontend avec Trivy
         uses: aquasecurity/trivy-action@v0.36.0
@@ -214,3 +262,4 @@ jobs:
         run: |
           docker push "lolaedoc/bouton-rouge:frontend-${{ github.sha }}"
           docker push "lolaedoc/bouton-rouge:frontend"
+  
