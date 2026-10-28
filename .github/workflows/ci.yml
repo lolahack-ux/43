@@ -183,6 +183,15 @@ jobs:
             -t "lolaedoc/bouton-rouge:frontend" \
             ./frontend
 
+      # Utilisation de Trivy pour vérification de l'image backend avant le push
+      - name: Scanner l'image backend avec Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: "lolaedoc/bouton-rouge:backend"
+          format: "table"
+          severity: "HIGH,CRITICAL"
+          exit-code: "0"
+
       # Publication du backend
       - name: Publier le backend
         run: |

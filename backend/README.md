@@ -65,3 +65,5 @@ lancer l'audit :
 ```powershell
 npm audit
 ```
+## Trivy
+C'est un outil de sécurité qui permet notamment d'analyser les images Docker.
