@@ -22,23 +22,23 @@ jobs:
   # ==========================================
 
   gitleaks:
-  name: Recherche de secrets
-  runs-on: ubuntu-latest
+    name: Recherche de secrets
+    runs-on: ubuntu-latest
 
-  steps:
-    - name: Récupérer le dépôt
-      uses: actions/checkout@v6
-      with:
-        fetch-depth: 0
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
-    - name: Analyser les secrets avec Gitleaks
-      uses: gitleaks/gitleaks-action@v3
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITLEAKS_CONFIG: .gitleaks.toml
-        # Création d'un rapport JSON et SARIF de gitleaks
-        GITLEAKS_ENABLE_SUMMARY: "true"
-        GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "true"
+      - name: Analyser les secrets avec Gitleaks
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
+          # Création d'un rapport JSON et SARIF de gitleaks
+          GITLEAKS_ENABLE_SUMMARY: "true"
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: "true"
 
   # ==========================================
   # 2. TESTS BACKEND
