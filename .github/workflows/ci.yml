@@ -188,6 +188,17 @@ jobs:
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: "lolaedoc/bouton-rouge:backend"
+          scanners: "vuln"
+          format: "table"
+          severity: "HIGH,CRITICAL"
+          exit-code: "1"
+          
+      # Utilisation de Trivy pour vérification de l'image frontend avant le push
+      - name: Scanner l'image frontend avec Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: "lolaedoc/bouton-rouge:frontend"
+          scanners: "vuln"
           format: "table"
           severity: "HIGH,CRITICAL"
           exit-code: "0"
