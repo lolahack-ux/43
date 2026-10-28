@@ -67,3 +67,4 @@ npm audit
 ```
 ## Trivy
 C'est un outil de sécurité qui permet notamment d'analyser les images Docker.
+Il est intégré au CI avant la publication des images pour détecter les failles de sécurité.
